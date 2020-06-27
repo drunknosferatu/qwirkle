@@ -17,14 +17,23 @@ int main(int *argc, char *argv[]){
 		}
 	}
 	imprimetab(tabuleiro,6,6);//imprime o tabuleiro inicial
-	j=0;
+	
+	j = 0;
+	i = 0;
+	char aux = 'A';
+	
 	while(j<108){//inicializando as peças
-		i=0;
-		while(i<6){
-			pecas[j].num='1'+i;
-			pecas[j++].letra='a'+i;
-			i++;
-		}
+		pecas[j].num = '1'+i;
+		pecas[j].letra = aux;
+		i++;
+		j++;
+           	 if (i == 6){
+                	i=0;
+                	aux++;
+                	if (aux == 'G') aux = 'A';
+            	}
+
 	}
+
 }
 
