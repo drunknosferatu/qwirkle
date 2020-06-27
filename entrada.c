@@ -12,7 +12,7 @@
 char **inicializaPecas(char *pecas[3]) {
 	
 	//aloca memória para as peças 
-	for(int i = 0; i < 107; i++) {
+	for(int i = 0; i < 108; i++) {
 		pecas[i] = (char *) malloc(sizeof(char)*3);
 	}
 	
@@ -20,7 +20,7 @@ char **inicializaPecas(char *pecas[3]) {
 	char aux = 'A';	
 	int i = 0;
 	int j = 0;
-	while (i<107){
+	while (i<108){
 		pecas[i][0] = aux;
 		pecas[i][1] = '1' + j;
 		pecas[i][2] = '\0';
