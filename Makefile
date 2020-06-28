@@ -1,13 +1,22 @@
-main.o : main.c
+entrada.o: entrada.c
+	gcc -c entrada.c -o entrada.o
+
+tab.o : tab.c
+	gcc -c tab.c -o tab.o
+
+main.o: main.c
 	gcc -c main.c -o main.o
 
-imprimetab.o : imprimetab.c
-	gcc -c imprimetab.c -o imprimetab.o
+qwirkle: entrada.o tab.o main.o
+	gcc -o qwirkle *.o
 
-jogo : main.o imprimetab.o
-	gcc -o jogo *.o
+all: qwirkle
 
-all : jogo
+run: all
+	./qwirkle
 
-run : all
-	./jogo
+clean: entrada.o tab.o main.o qwirkle
+	rm *.o qwirkle
+
+zip: struct.h entrada.c entrada.h tab.c tab.h main.c
+	zip qwirkle.zip Makefile *.c *.h	

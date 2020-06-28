@@ -1,6 +1,8 @@
-#include<stdio.h>
-#include "peca.h"	
-void imprimetab(peca **tabuleiro,int linha, int coluna){
+#include <stdio.h>
+
+#include "struct.h"
+
+void imprimeTab(peca **tabuleiro,int linha, int coluna){
 	int aux;
 	printf(" ");
 	for (aux=0;aux<coluna;aux++){
