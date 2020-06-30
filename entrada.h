@@ -1,2 +1,2 @@
-peca inicializaPecas(peca *pecas); 
+void inicializaPecas(peca *pecas); 
 int configuraJogo(jogador *jogadores);

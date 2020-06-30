@@ -26,6 +26,5 @@ int main(int *argc, char *argv[]) {
 	}	
 	
 	imprimeTab(tabuleiro,6,6); //imprime o tabuleiro inicial
-	*pecas = inicializaPecas(pecas); //inicializa as peças do jogo
-
+	inicializaPecas(pecas); //inicializa as peças do jogo
 }

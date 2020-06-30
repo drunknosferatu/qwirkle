@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <time.h>
 #include "struct.h"
 
 //recebe as configurações do jogo
@@ -61,20 +61,33 @@ int configuraJogo(jogador *jogador) {
 }	
 
 //inicializa as peças do jogo
-peca * inicializaPecas(peca *pecas) {
+void inicializaPecas(peca *pecas) {
 	char aux = 'A';
+	int posicao;
+	int usados[107];
 	int i = 0;
 	int j = 0;
+	int k = 0;
+	srand(time(NULL));
 	while(j<108) { //esse laço inicializa as peças
-        	pecas[j].num = '1'+i;
-                pecas[j].letra = aux;
-                i++;
-                j++;
-                if (i == 6){
-                        i=0;
-                        aux++;
-                        if (aux == 'G') aux = 'A';
-                }
-        }
-	return pecas;
+		k=0;
+		posicao=rand()%108;//randomiza uma posição para a peça
+		while(k<j){//checa se a posição ja esta ocupada
+			if(usados[k]==posicao){
+				posicao=rand()%108;//randomiza uma nova posição pois a anterior estava ocupada
+				k=-1;//reseta k
+			}
+			k++;
+		}
+		usados[j]=posicao;//guarda a posição para não ser reutilizada
+		pecas[posicao].num = '1'+i;
+		pecas[posicao].letra = aux;
+		i++;
+		j++;
+		if (i == 6){
+			i=0;
+			aux++;
+			if (aux == 'G') aux = 'A';
+		}
+	}
 }
