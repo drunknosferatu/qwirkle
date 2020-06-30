@@ -23,7 +23,7 @@ int configuraJogo(jogador *jogador) {
 	
 	int i = 1; //contador para o número de jogadores
 	int j = 1; //contador auxiliar
-	char auxC[40]; //char auxiliar para verificacoes do nome
+	char auxC[42]; //char auxiliar para verificacoes do nome
 	int auxI = 0; //int auxiliar
 
 	//recebe o nome dos jogadores
@@ -32,9 +32,10 @@ int configuraJogo(jogador *jogador) {
 		while (!auxI) {
 			printf("\nInsira o nome do jogador %d (ate 40 caracteres) e pressione Enter: ", i);
                 	setbuf(stdin, NULL);
-                	fgets(auxC, 50, stdin);
+                	fgets(auxC, 41, stdin);
+					
 
-			if (strlen(auxC) > 40) {
+			if (strlen(auxC) > 41) {
 				printf("\nEsse nome e grande demais. Tente novamente inserindo um nome de no maximo 40 caracteres.\n");
                         	while (getchar() != '\n');
 				continue;
