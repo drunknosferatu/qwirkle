@@ -92,20 +92,6 @@ int main(int *argc, char *argv[]) {
 				break;
 		}
 	}
-	/*
-	char teste;
-	scanf("%c",&teste);
-	getchar();
-	setbuf(stdin,NULL);
-	char test;
-	scanf("%c",&test);
-	getchar();
-	setbuf(stdin,NULL);
-	trocaPecas(jogadores[0].pecasJog,test,teste,pecas);
-	for(j = 0; j < 6; j++) {
-			printf("%c%c ", jogadores[0].pecasJog[j].letra, jogadores[0].pecasJog[j].num);
-	}*/
-
 	free(jogadores);
 	free(pecas);
 }

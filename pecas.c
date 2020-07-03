@@ -38,18 +38,15 @@ void inicializaPecas(peca *pecas) {
 void trocaPecas(peca *pecasJog, char letra,char num ,peca *pecas) {
 	srand(time(NULL));
 	for(int i=0; i<6; i++){
-		printf("hm");
 		if(pecasJog[i].num==num&&pecasJog[i].letra==letra){
 			char auxLetra;
 			char auxNum;
 			int auxPosicao;
-			printf("hm");
 			for(auxPosicao=0;auxPosicao<108;auxPosicao++){
 				if(pecas[auxPosicao].num==' '){
 					break;
 				}
 			}
-			printf("%d",auxPosicao);
 			int posicao=rand()%auxPosicao;
 			auxNum=pecas[posicao].num;
 			auxLetra=pecas[posicao].letra;
@@ -57,7 +54,7 @@ void trocaPecas(peca *pecasJog, char letra,char num ,peca *pecas) {
 			pecas[posicao].letra=letra;
 			for(int j=auxPosicao;j>0;j--){
 				pecas[j].num=pecas[j-1].num;
-				pecas[j],letra=pecas[j-1].letra;
+				pecas[j].letra=pecas[j-1].letra;
 			}
 			pecas[0].letra=auxLetra;
 			pecas[0].num=auxNum;
