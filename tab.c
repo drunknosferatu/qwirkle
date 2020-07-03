@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "struct.h"
 
@@ -33,4 +34,13 @@ void imprimeTab(peca **tabuleiro,int linha, int coluna){
 		printf(" %d ",aux);
 	}
 	printf("\n");
+}
+
+peca ** realocaTab(peca **tabuleiro, int *maxlinhas, int *maxcolunas) {
+	*maxlinhas += 5;
+	*maxcolunas += 5;
+	//realoca um tabuleiro de dimensão MxN, sendo M o número de linhas e N o número de colunas
+	tabuleiro = realloc(tabuleiro, (sizeof(peca) * ((*maxlinhas)*(*maxcolunas))));
+	
+	return tabuleiro;
 }
