@@ -5,60 +5,52 @@
 #include "struct.h"
 
 //recebe as configurações do jogo
-int configuraJogo(jogador *jogador) {
-	int nJog = 0;
-	printf("Bem vindo ao Qwirkle! =)\n");
-	printf("\nInsira o numero de jogadores (de 2 a 18): ");
-	
-	//recebe o número de jogadores e aloca o ponteiro para jogadores (cada jogador é uma struct "jogador")
-	setbuf(stdin, NULL);
-	
-	//não permite que o usuário insira um número inválido de jogadores (menor que 2 ou maior que 18 (108 jogadores/6 peças))
-	while (nJog < 2 || nJog > 18) {
-		scanf("%d", &nJog);
-		if (nJog < 2 || nJog > 18) printf("\nOh oh! Numero invalido. Tente novamente inserindo numeros de 2 a 18: ");
-	}
-	
-	jogador = malloc(sizeof(jogador) * nJog); //alocação dos jogadores	
-	
-	int i = 1; //contador para o número de jogadores
-	int j = 1; //contador auxiliar
+void configuraJogo(int nJog, jogador *jogadores, peca *pecas) {
+	int i = 0; //contador para o número de jogadores
+	int j; //contador auxiliar
 	char auxC[42]; //char auxiliar para verificacoes do nome
 	int auxI = 0; //int auxiliar
 
 	//recebe o nome dos jogadores
-	while (i <= nJog) {
+	while (i < nJog) {
 		auxI = 0;
 		while (!auxI) {
-			printf("\nInsira o nome do jogador %d (ate 40 caracteres) e pressione Enter: ", i);
+			printf("\nInsira o nome do jogador %d (ate 40 caracteres) e pressione Enter: ", i+1);
                 	setbuf(stdin, NULL);
-                	fgets(auxC, 41, stdin);
+                	fgets(auxC, 50, stdin);
 					
 
-			if (strlen(auxC) > 41) {
+			if (strlen(auxC) > 42) {
 				printf("\nEsse nome e grande demais. Tente novamente inserindo um nome de no maximo 40 caracteres.\n");
                         	while (getchar() != '\n');
 				continue;
 			}
 
-			for (j = 1; j < i; j++) {
-				if(strcmp(auxC, jogador[j].nome) == 0) {
+			for (j = 0; j < i; j++) {
+				if(strcmp(auxC, jogadores[j].nome) == 0) {
 					printf("\nOh oh! Esse nome ja foi inserido. Por favor, tente colocar outro nome.\n\n");
 					break;
 				}
 			}
 			if (j == i) {
-				strcpy(jogador[i].nome, auxC);
+				strcpy(jogadores[i].nome, auxC);
 				auxI = 1;
 			}
 		}	
 		i++;
 	}
-
-	for (i = 0; i < nJog; i++) {
-		jogador[i].pontos = 0;
+	
+	auxI = 0;
+	for(i = 0; i < nJog; i++) {
+		jogadores[i].pontos = 0;
+		for(j = 0; j < 6; j++) {
+			jogadores[i].pecasJog[j].num = pecas[107-auxI].num;
+			jogadores[i].pecasJog[j].letra = pecas[107-auxI].letra;
+			pecas[107-auxI].num = ' ';
+			pecas[107-auxI].letra = ' ';
+			auxI++;
+		}
 	}
-	return nJog;
 }	
 
 //inicializa as peças do jogo

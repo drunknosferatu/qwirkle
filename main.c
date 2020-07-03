@@ -8,11 +8,25 @@
 int main(int *argc, char *argv[]) {
 	int i; //primeira dimensão de vetores e int auxiliar
 	int j; //segunda dimensão de vetores e int auxiliar
-	jogador *jogador;
+	jogador *jogadores;
 	int nJog;
-	nJog = configuraJogo(jogador);
 	peca *pecas;
-	pecas = malloc (sizeof(peca) * 108); //alocando espaço para peças
+	
+	pecas = (peca *) malloc (sizeof(peca) * 108); //alocando espaço para peças
+	
+	inicializaPecas(pecas); //inicializa as peças do jogo
+	system("clear || cls");
+	printf("Bem-vindo ao Qwirkle! =)\n\nInsira o numero de jogadores (2 a 18): ");
+	setbuf(stdin, NULL);
+	scanf("%d", &nJog);
+	while(nJog > 18 || nJog < 2) {
+		printf("Oh oh! Numero de jogadores invalido. Por favor, tente novamente inserindo numeros de 2 a 18.");
+		setbuf(stdin, NULL);
+		scanf("%d", &nJog);
+	}
+
+	jogadores = (jogador *) malloc(sizeof(jogador) * nJog); //alocação dos jogadores
+	configuraJogo (nJog, jogadores, pecas); //inicializa os jogadores com seus nomes, suas peças e suas pontuações (0)
 	peca **tabuleiro; //matriz de structs utilizada como tabuleiro
 	tabuleiro = (peca **) malloc(sizeof(peca *) * 6);//a matriz vai ter inicialmente 6x6 structs abertas
 	
@@ -25,6 +39,12 @@ int main(int *argc, char *argv[]) {
 		}
 	}	
 	
-	imprimeTab(tabuleiro,6,6); //imprime o tabuleiro inicial
-	inicializaPecas(pecas); //inicializa as peças do jogo
+	for(i = 0; i < nJog; i++) {
+		printf("Jogador %d: %s", i+1, jogadores[i].nome);
+		printf("Peças: ");
+		for(j = 0; j < 6; j++) {
+			printf("%c%c ", jogadores[i].pecasJog[j].letra, jogadores[i].pecasJog[j].num);
+		}
+		printf("\n");
+	}
 }

@@ -5,7 +5,7 @@ typedef struct{
 } peca;
 
 typedef struct {
-	char nome[40];
-	peca *pecasJog;
+	char nome[42];
+	peca pecasJog[6];
 	int pontos;
 } jogador;
