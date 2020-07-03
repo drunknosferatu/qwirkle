@@ -7,7 +7,10 @@ tab.o : tab.c
 main.o: main.c
 	gcc -c main.c -o main.o
 
-qwirkle: entrada.o tab.o main.o
+trocaPecas.o : trocaPecas.c
+	gcc -c trocaPecas.c -o trocaPecas.o
+
+qwirkle: entrada.o tab.o main.o trocaPecas.o
 	gcc -o qwirkle *.o
 
 all: qwirkle

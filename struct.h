@@ -9,3 +9,5 @@ typedef struct {
 	peca pecasJog[6];
 	int pontos;
 } jogador;
+
+void trocaPecas(peca *pecasJog,char num, char letra, peca *pecas);
