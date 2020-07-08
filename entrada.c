@@ -28,7 +28,7 @@ void configuraJogo(int nJog, jogador *jogadores, peca *pecas) {
 
 			for (j = 0; j < i; j++) {
 				if(strcmp(auxC, jogadores[j].nome) == 0) {
-					printf("\nOh oh! Esse nome ja foi inserido. Por favor, tente colocar outro nome.\n\n");
+					printf("Oh oh! Esse nome ja foi inserido. Por favor, tente colocar outro nome.\n\n");
 					break;
 				}
 			}

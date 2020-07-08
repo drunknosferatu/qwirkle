@@ -3,9 +3,9 @@
 
 #include "struct.h"
 #include "entrada.h"
-#include "interface.h"
 #include "pecas.h"
 #include "tab.h"
+#include "jogada.h"
 
 int main(int *argc, char *argv[]) {
 	//primeira e segunda dimensão de vetores e ints auxiliares
@@ -36,7 +36,7 @@ int main(int *argc, char *argv[]) {
 
 	//não permite que o usuário insira um número inválido de jogadores (menos que 2 ou mais que 18)
 	while(nJog > 18 || nJog < 2) {
-		printf("Oh oh! Numero de jogadores invalido. Por favor, tente novamente inserindo numeros de 2 a 18.");
+		printf("\nOh oh! Numero de jogadores invalido. Por favor, tente novamente inserindo numeros de 2 a 18.\n\n");
 		setbuf(stdin, NULL);
 		scanf("%d", &nJog);
 	}
