@@ -35,7 +35,7 @@ void inicializaPecas(peca *pecas) {
 	}
 }
 
-void trocaPecas(peca *pecasJog, char letra,char num ,peca *pecas) {
+int trocaPecas(peca *pecasJog, char letra,char num ,peca *pecas) {
 	srand(time(NULL));
 	for(int i=0; i<6; i++){
 		if(pecasJog[i].num==num&&pecasJog[i].letra==letra){
@@ -62,7 +62,8 @@ void trocaPecas(peca *pecasJog, char letra,char num ,peca *pecas) {
 			pecasJog[i].num=pecas[auxPosicao].num;
 			pecas[auxPosicao].num=' ';
 			pecas[auxPosicao].letra=' ';
-			break;
+			return 1;
 		}
 	}
+	return 0;
 }
