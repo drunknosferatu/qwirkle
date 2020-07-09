@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "struct.h"
 #include "entrada.h"
 #include "pecas.h"
 #include "tab.h"
 #include "jogada.h"
+#include "flush.h"
 
 int main(int *argc, char *argv[]) {
 	//primeira e segunda dimensão de vetores e ints auxiliares
@@ -63,7 +65,7 @@ int main(int *argc, char *argv[]) {
 	char modo;
 	int w = 0;
 	printf("\nDeseja jogar no modo cheat? Digite S para sim ou N para nao. Em seguida, pressione Enter: ");
-	
+
 	while(!w) {
 		setbuf(stdin, NULL);
 		modo = getc(stdin);
@@ -76,17 +78,61 @@ int main(int *argc, char *argv[]) {
 				printf("Obs.: voce esta no cheat mode\n\n");
 				w = 1;
 				break;
-
 			case('N'):
 			case('n'):
 				system("clear || cls");
 				imprimeTab(tabuleiro, linha, coluna);
+				printf("\nVez do(a) %s\n", jogadores[vez].nome);
+				printf("Peças disponiveis: ");
+				int i;
+				for(i = 0; i < 6; i++) printf("%c%c ", jogadores[vez].pecasJog[i].letra, jogadores[vez].pecasJog[i].num);
+				printf("\n\nComandos disponiveis:\n-Para jogar, digite jogar -peca- -linha- -coluna- (exemplo: jogar E5 0 0) e em seguida pressione Enter;\n");
+			  printf("-Para trocar uma peca, digite trocar -peca- (exemplo: trocar E5) e em seguida pressione Enter;\n");
+			  printf("-Para passar sua vez, digite passar e em seguida pressione Enter.\n\n");
+			  printf("O que deseja fazer?\n\n");
+			  flush_in();
+			  char entrada[30];
+			  fgets(entrada, 30, stdin);
+			  char movimento[30];
+			  int aux;
+			  int j=0;
+			  while(entrada[j]!=' ')j++;
+			  aux=j;
+			  movimento[j--]='\0';
+			  while(j>=0) {
+				  movimento[j]=entrada[j];
+				  j--;
+			  }
+			  i=0;
+ 			  int cont = 0;
+			  if (!strcmp(movimento, "jogar")||!strcmp(movimento,"j")){
+			    j=aux;
+				while(entrada[j]==' ')j++;
+				int i=0;
+				while(entrada[j]!=' '){
+					movimento[i++]=entrada[j++];
+				}
+				movimento[i]='\0';
+			    if (movimento[0] >= 'a'&&movimento[0] <= 'f') {
+			      movimento[0] -= 'a';
+			      movimento[0] += 'A';
+			    }
+			    for (int k = 0; k < 6; k++){
+			      if (movimento[0]==jogadores[vez].pecasJog[k].letra && movimento[1]==jogadores[vez].pecasJog[k].num){
+			        while(entrada[j]==' ')j++;
+			        int linha = entrada[j++]-'0';
+			        while(entrada[j]==' ')j++;
+			        int coluna = entrada[j]-'0';
+					tabuleiro[linha][coluna].letra=movimento[0];
+					tabuleiro[linha][coluna].num=movimento[1];
+				  }
+				}
+			  }
 				while (!w) {
-					jogada (jogadores, pecas, vez);
+					jogada (tabuleiro ,jogadores, pecas, vez);
 					w = 1;
 				}
 				break;
-
 			default:
 				printf("\nOh oh! Opcao invalida. Tente novamente inserindo os caracteres S ou N.\n\n");
 				break;

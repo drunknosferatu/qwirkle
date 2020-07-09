@@ -3,69 +3,9 @@
 #include <string.h>
 
 #include "struct.h"
+#include "tab.h"
+#include "flush.h"
 
-void flush_in(){
-    int ch;
-    while( (ch = fgetc(stdin)) != EOF && ch != '\n' ){}
-}
-
-void jogada(jogador *jogadores, peca *pecas, int vez) {
-	printf("\nVez do(a) %s\n", jogadores[vez].nome);
-	printf("Peças disponiveis: ");
-	
-	int i;
-	for(i = 0; i < 6; i++) printf("%c%c ", jogadores[vez].pecasJog[i].letra, jogadores[vez].pecasJog[i].num);
-
-	printf("\n\nComandos disponiveis:\n-Para jogar, digite jogar -peca- -linha- -coluna- (exemplo: jogar E5 0 0) e em seguida pressione Enter;\n");
-	printf("-Para trocar uma peca, digite trocar -peca- (exemplo: trocar E5) e em seguida pressione Enter;\n");
-	printf("-Para passar sua vez, digite passar e em seguida pressione Enter.\n\n");
-	printf("O que deseja fazer?\n\n");
-
-  flush_in();
-
-	char entrada[30];
-	fgets(entrada, 30, stdin);
-	char movimento[30];
-  int j=0;
-  while(entrada[j]!=' ')j++;
-  aux[j--]='\0';
-  while(j>=0) {
-	  movimento[j]=entrada[j];
-	  j--;
-  }
-  i = 0;
-  int cont = 0;
-
-  if (!strcmp(movimento, "jogar")||!strcmp(movimento,"j")){
-    movimento = strtok(NULL, " ");
-    if (movimento[0] >= 'a' || movimento[0] <= 'f') {
-      movimento[0] -= 'a';
-      movimento[0] += 'A';
-    }
-    for (i = 0; i < 6; i++){
-      if (movimento[0]==jogadores[vez].pecasJog[i].letra && movimento[1]==jogadores[vez].pecasJog[i].num){
-        movimento = strtok(NULL, " ");
-        int linha = atoi(movimento);
-        movimento = strtok(NULL, " ");
-        int coluna = atoi(movimento);
-        //break;
-        //verificaJogada ()
-        } 
-      } 
-    printf ("Movimento invalido.\n");
-        
-  } else {
-     if (strcmp(movimento, "trocar")==0){
-       movimento = strtok(NULL, " ");
-       trocaPecas(jogadores[vez].pecasJog, movimento[0], movimento[1], pecas);
-    }
-      
-      if (strcmp (movimento, "passar")==0){
-  
-    }
-  }*/
-
-}
 
 //verifica se o jogador pode ou não fazer a jogada que deseja
 int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog) {
@@ -76,6 +16,7 @@ int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog) 
 		if((tabuleiro[i][colunaJog].letra == pecaJog.letra) && (tabuleiro[i][colunaJog].num == pecaJog.num)) return 0;
 		i--;
 	}	
+	printf("passei");
 
 	//o mesmo procedimento é repetido para coluna abaixo, a linha à esquerda e a linha à direita
 	i = linhaJog + 1;
@@ -134,3 +75,78 @@ int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog) 
 	if(cont == 4) return 1;
 	else return 0;
 }
+void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez) {
+	printf("\nVez do(a) %s\n", jogadores[vez].nome);
+	printf("Peças disponiveis: ");
+	
+	int i;
+	for(i = 0; i < 6; i++) printf("%c%c ", jogadores[vez].pecasJog[i].letra, jogadores[vez].pecasJog[i].num);
+
+	printf("\n\nComandos disponiveis:\n-Para jogar, digite jogar -peca- -linha- -coluna- (exemplo: jogar E5 0 0) e em seguida pressione Enter;\n");
+	printf("-Para trocar uma peca, digite trocar -peca- (exemplo: trocar E5) e em seguida pressione Enter;\n");
+	printf("-Para passar sua vez, digite passar e em seguida pressione Enter.\n\n");
+	printf("O que deseja fazer?\n\n");
+
+  flush_in();
+
+	char entrada[30];
+	fgets(entrada, 30, stdin);
+	char movimento[30];
+	int aux;
+  int j=0;
+  while(entrada[j]!=' ')j++;
+  aux=j;
+  movimento[j--]='\0';
+  while(j>=0) {
+	  movimento[j]=entrada[j];
+	  j--;
+  }
+  i=0;
+  int cont = 0;
+
+  if (!strcmp(movimento, "jogar")||!strcmp(movimento,"j")){
+    j=aux;
+	while(entrada[j]==' ')j++;
+	int i=0;
+	while(entrada[j]!=' '){
+		movimento[i++]=entrada[j++];
+	}
+	movimento[i]='\0';
+    if (movimento[0] >= 'a'&&movimento[0] <= 'f') {
+      movimento[0] -= 'a';
+      movimento[0] += 'A';
+    }
+   for (int k = 0; k < 6; k++){
+      if (movimento[0]==jogadores[vez].pecasJog[k].letra && movimento[1]==jogadores[vez].pecasJog[k].num){
+        while(entrada[j]==' ')j++;
+        int linha = entrada[j++]-'0';
+        while(entrada[j]==' ')j++;
+        int coluna = entrada[j]-'0';
+		if(verificaJogada(tabuleiro,jogadores[vez].pecasJog[k],linha,coluna)){
+			tabuleiro[linha][coluna].letra=movimento[0];
+			tabuleiro[linha][coluna].num=movimento[1];
+		}else{
+			printf("Oh Oh, Entrada inválida\n");
+		}
+		break;
+        } 
+      } 
+  }
+  imprimeTab(tabuleiro,1,1);
+}/*
+    printf ("Movimento invalido.\n");
+        
+  } else {
+     if (strcmp(movimento, "trocar")==0){
+       movimento = strtok(NULL, " ");
+       trocaPecas(jogadores[vez].pecasJog, movimento[0], movimento[1], pecas);
+    }
+      
+      if (strcmp (movimento, "passar")==0){
+  
+    }
+  }
+
+}*/
+
+

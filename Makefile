@@ -13,7 +13,10 @@ jogada.o: jogada.c
 main.o: main.c
 	gcc -c main.c -o main.o
 
-qwirkle: entrada.o pecas.o tab.o jogada.o main.o
+flush.o: flush.c
+	gcc -c flush.c -o flush.o
+
+qwirkle: entrada.o pecas.o tab.o jogada.o main.o flush.o
 	gcc -o qwirkle *.o
 
 all: qwirkle
