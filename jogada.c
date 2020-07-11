@@ -5,6 +5,7 @@
 #include "struct.h"
 #include "tab.h"
 #include "pecas.h"
+#include "flush.h"
 
 //verifica se o jogador pode ou não fazer a jogada que deseja
 int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog) {
@@ -72,87 +73,107 @@ int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog) 
 	if(cont == 4) return 1;
 	else return 0;
 }
+					
 
 
-
-
-void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez) {
-	char movimento[30];	
+void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linha, int *coluna) {
+	char movimento[30];
 	char entrada[30];
 	while(1){
-	printf("\nVez do(a) %s\n", jogadores[vez].nome);
-	printf("Peças disponiveis: ");
-	int i;
-	for(i = 0; i < 6; i++) printf("%c%c ", jogadores[vez].pecasJog[i].letra, jogadores[vez].pecasJog[i].num);
-	printf("\n\nComandos disponiveis:\n-Para jogar, digite jogar -peca- -linha- -coluna- (exemplo: jogar E5 0 0) e em seguida pressione Enter;\n");
-	printf("-Para trocar uma peca, digite trocar -peca- (exemplo: trocar E5) e em seguida pressione Enter;\n");
-	printf("-Para passar sua vez, digite passar e em seguida pressione Enter.\n\n");
-	printf("O que deseja fazer?\n\n");
-	setbuf(stdin,NULL);
-	fgets(entrada, 30, stdin);
-	printf("%s",entrada);
-	int aux;
-	int j=0;
-	while(entrada[j]){
-		if(entrada[j]==' ') break;
-		j++;
-	}
-	aux=j;
-	if(j!=strlen(entrada)){
-		movimento[j--]='\0';
-		while(j>=0) {
-			movimento[j]=entrada[j];
-			j--;
+		imprimeTab(tabuleiro, *linha, *coluna);
+		printf("\nVez do(a) %s\n", jogadores[vez].nome);
+		printf("Peças disponiveis: ");
+		int i;
+		for(i = 0; i < 6; i++) printf("%c%c ", jogadores[vez].pecasJog[i].letra, jogadores[vez].pecasJog[i].num);
+		printf("\n\nComandos disponiveis:\n-Para jogar, digite jogar -peca- -linha- -coluna- (exemplo: jogar E5 0 0) e em seguida pressione Enter;\n");
+		printf("-Para trocar uma peca, digite trocar -peca- (exemplo: trocar E5) e em seguida pressione Enter;\n");
+		printf("-Para passar sua vez, digite passar e em seguida pressione Enter.\n\n");
+		printf("O que deseja fazer?\n\n");
+		setbuf(stdin,NULL);
+		fgets(entrada, 30, stdin);
+		int aux;
+		int j=0;
+		while(entrada[j]){
+			if(entrada[j]==' ') break;
+			j++;
 		}
-	}else{
-		strcpy(movimento,entrada);
-		movimento[j-1]='\0';
-	}
-	i=0;
-	if (!strcmp(movimento, "jogar")||!strcmp(movimento,"j")){
-		j=aux;
-		while(entrada[j]==' ')j++;
-		int i=0;
-		while(entrada[j]!=' '){
-			movimento[i++]=entrada[j++];
+		aux=j;
+		if(j!=strlen(entrada)){
+			movimento[j--]='\0';
+			while(j>=0) {
+				movimento[j]=entrada[j];
+				j--;
+			}
+		}else{
+			strcpy(movimento,entrada);
+			movimento[j-1]='\0';
 		}
-		movimento[i]='\0';
-		if (movimento[0] >= 'a'&&movimento[0] <= 'f') {
-			movimento[0] -= 'a';
-			movimento[0] += 'A';
-		}
-		for (int k = 0; k < 6; k++){
-			if (movimento[0]==jogadores[vez].pecasJog[k].letra && movimento[1]==jogadores[vez].pecasJog[k].num){
-				while(entrada[j]==' ')j++;
-				int linhaJog = entrada[j++]-'0';
-				while(entrada[j]==' ')j++;
-				int colunaJog = entrada[j]-'0';
-				if(verificaJogada(tabuleiro,jogadores[vez].pecasJog[k],linhaJog,colunaJog)){
-					tabuleiro[linhaJog][colunaJog].letra=movimento[0]; 
-					tabuleiro[linhaJog][colunaJog].num=movimento[1];
-				}else{
-					printf("Oh Oh, Entrada inválida\n");
+		i=0;
+		if (!strcmp(movimento, "jogar")||!strcmp(movimento,"j")){
+			j=aux;
+			while(entrada[j]==' ')j++;
+			int i=0;
+			while(entrada[j]!=' '){
+				movimento[i++]=entrada[j++];
+			}
+			movimento[i]='\0';
+			if (movimento[0] >= 'a'&&movimento[0] <= 'f') {
+				movimento[0] -= 'a';
+				movimento[0] += 'A';
+			}
+			int k;
+			for (k = 0; k < 6; k++){
+				if (movimento[0]==jogadores[vez].pecasJog[k].letra && movimento[1]==jogadores[vez].pecasJog[k].num){
+					while(entrada[j]==' ')j++;
+					int linhaJog = entrada[j++]-'0';
+					while(entrada[j]==' ')j++;
+					int colunaJog = entrada[j]-'0';
+					if(colunaJog<0||colunaJog>=*coluna||linhaJog<0||linhaJog>=*linha){
+						printf("Oh Oh, essa posição não existe\n");
+						break;
+					}
+					if(verificaJogada(tabuleiro,jogadores[vez].pecasJog[k],linhaJog,colunaJog)){
+						tabuleiro[linhaJog][colunaJog].letra=movimento[0];
+						tabuleiro[linhaJog][colunaJog].num=movimento[1];
+						int z;
+						for (z=0;pecas[z].letra!=' '&&pecas[z].num!=' ';z++);
+						jogadores[vez].pecasJog[k].letra=pecas[z-1].letra;
+						pecas[z-1].letra=' ';
+						jogadores[vez].pecasJog[k].num=pecas[z-1].num;
+						pecas[z-1].num=' ';
+					}else{
+						printf("Oh Oh, Entrada inválida\n");
+					}
+					if(linhaJog==*linha||colunaJog==*coluna)//fazer o realloc aqui
+					break;
 				}
+			}
+			if(k==6) printf("Oh Oh, você não tem essa peça\n");
+		}else if(!strcmp(movimento,"trocar")||!strcmp(movimento,"t")){
+			j=aux;
+			int flagValido=0;
+			while(entrada[j+1]){
+				while(entrada[j]==' ')j++;
+				int i=0;
+				while(entrada[j]!=' '&&entrada[j+1])movimento[i++]=entrada[j++];
+				movimento[i]='\0';
+				if (movimento[0] >= 'a'&&movimento[0] <= 'f') {
+					movimento[0] -= 'a';
+					movimento[0] += 'A';
+				}
+				aux=trocaPecas(jogadores[vez].pecasJog,movimento[0],movimento[1],pecas);
+				if(!aux){
+					printf("Oh Oh, você não tem a peça %c%c, as demais serão trocadas caso válidas\n",movimento[0], movimento[1]);
+				}else flagValido=1;
+			}
+			if(flagValido){
+				printf("Troca efetuada das peças válidas\n");
 				break;
 			}
+		}else if(!strcmp(movimento,"passar")||!strcmp(movimento,"p")){
+			break;
+		}else{
+			printf("Oh Oh entrada inválida");
 		}
-	}else if(!strcmp(movimento,"trocar")||!strcmp(movimento,"t")){
-		j=aux;
-		while(entrada[j]==' ')j++;
-		int i=0;
-		while(entrada[j]!=' '){
-			movimento[i++]=entrada[j++];
-		}
-		movimento[i]='\0';
-		if (movimento[0] >= 'a'&&movimento[0] <= 'f') {
-			movimento[0] -= 'a';
-			movimento[0] += 'A';
-		}
-		aux=trocaPecas(jogadores[vez].pecasJog,movimento[0],movimento[1],pecas);
-		if(!aux){
-			printf("Oh Oh, você não tem essa peça\n");
-		}else break;
-	}else if(!strcmp(movimento,"passar")||!strcmp(movimento,"p")) break;
-	else printf("Oh Oh opção inválida");
 	}
 }

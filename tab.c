@@ -7,7 +7,7 @@ void imprimeTab(peca **tabuleiro,int linha, int coluna){
 	int aux;
 	printf(" ");
 	for (aux=0;aux<coluna;aux++){
-		printf(" %d ",aux);
+		printf(" %d ",aux+1);
 	}
 	printf("\n");
 	for (int i=0;i<linha;i++){
@@ -16,13 +16,13 @@ void imprimeTab(peca **tabuleiro,int linha, int coluna){
 			printf("-");
 		}
 		printf("\n");
-		printf("%d", i);			
+		printf("%d", i+1);			
 		printf("|");
 		for (int j=0;j<coluna;j++){
 			printf("%c", tabuleiro[i][j].letra);
 			printf("%c|",tabuleiro[i][j].num);
 		}
-		printf("%d\n",i);
+		printf("%d\n",i+1);
 	}
 	printf(" -");
 	for(aux=0;aux<coluna*3;aux++){
@@ -31,7 +31,7 @@ void imprimeTab(peca **tabuleiro,int linha, int coluna){
 	printf("\n");
 	printf(" ");
 	for (aux=0;aux<coluna;aux++){
-		printf(" %d ",aux);
+		printf(" %d ",aux+1);
 	}
 	printf("\n");
 }
