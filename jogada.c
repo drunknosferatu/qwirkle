@@ -5,7 +5,6 @@
 #include "struct.h"
 #include "tab.h"
 #include "pecas.h"
-#include "flush.h"
 
 //verifica se o jogador pode ou não fazer a jogada que deseja
 int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog, int linha, int coluna, int *pontos) {
@@ -114,7 +113,25 @@ int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog, 
 	}
 	return 0;
 }
-					
+
+void posJogada(peca* pecasJog, peca* pecas){
+	int i=0;
+	while(i<6){
+		if (pecasJog[i].letra==' '){
+			int j=0;
+			while(j<108){
+				if(pecas[j].letra==' ')break;
+				j++;
+			}
+			pecasJog[i].letra=pecas[j-1].letra;
+			pecasJog[i].num=pecas[j-1].num;
+			pecas[j-1].num=' ';
+			pecas[j-1].letra=' ';
+		}
+	i++;
+	}
+}
+
 
 
 void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linha, int *coluna, int *jogadasT) {
@@ -134,7 +151,9 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 		printf("\nVez do(a) %s\n", jogadores[vez].nome);
 		printf("Peças disponiveis: ");
 		int i;
-		for(i = 0; i < 6; i++) printf("%c%c ", jogadores[vez].pecasJog[i].letra, jogadores[vez].pecasJog[i].num);
+		for(i = 0; i < 6; i++){
+			if(jogadores[vez].pecasJog[i].letra!=' ')printf("%c%c ", jogadores[vez].pecasJog[i].letra, jogadores[vez].pecasJog[i].num);
+		}
 		printf("\n\nQuantidade de pontos: %d\n\n", jogadores[vez].pontos);
 		printf("\n\nComandos disponiveis:\n-Para jogar, digite jogar -peca- -linha- -coluna- (exemplo: jogar E5 0 0) e em seguida pressione Enter;\n");
 		printf("-Para trocar uma peca, digite trocar -peca- (exemplo: trocar E5) e em seguida pressione Enter;\n");
@@ -191,7 +210,9 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 							if(loc = 'C') {
 								if(colunaJog == guardaColuna) {
 									tabuleiro[linhaJog][colunaJog].letra=movimento[0];
-                                                                	tabuleiro[linhaJog][colunaJog].num=movimento[1];
+									tabuleiro[linhaJog][colunaJog].num=movimento[1];
+									jogadores[vez].pecasJog[k].letra=' ';
+									jogadores[vez].pecasJog[k].num=' ';
 									jogadasTotais++;
 									jogadores[vez].pontos += auxPontos;
 									auxPontos = 0;
@@ -206,7 +227,9 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 							if(loc = 'L') {
 								if(linhaJog == guardaLinha) {
 									tabuleiro[linhaJog][colunaJog].letra=movimento[0];
-                                                                	tabuleiro[linhaJog][colunaJog].num=movimento[1];
+									tabuleiro[linhaJog][colunaJog].num=movimento[1];
+									jogadores[vez].pecasJog[k].letra=' ';
+									jogadores[vez].pecasJog[k].num=' ';
 									jogadasTotais++;
 									jogadores[vez].pontos += auxPontos;
 									auxPontos = 0;
@@ -223,7 +246,9 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 							if(guardaLinha == linhaJog) {
 								loc = 'L';
 								tabuleiro[linhaJog][colunaJog].letra=movimento[0];
-                                                        	tabuleiro[linhaJog][colunaJog].num=movimento[1];
+								tabuleiro[linhaJog][colunaJog].num=movimento[1];
+								jogadores[vez].pecasJog[k].letra=' ';
+								jogadores[vez].pecasJog[k].num=' ';
 								jogadasTotais++;
 								jogadores[vez].pontos += auxPontos;
 								auxPontos = 0;
@@ -235,7 +260,9 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 							if(guardaColuna == colunaJog) {
 								loc = 'C';
 								tabuleiro[linhaJog][colunaJog].letra=movimento[0];
-                                                        	tabuleiro[linhaJog][colunaJog].num=movimento[1];
+								tabuleiro[linhaJog][colunaJog].num=movimento[1];
+								jogadores[vez].pecasJog[k].letra=' ';
+								jogadores[vez].pecasJog[k].num=' ';
 								jogadasTotais++;
 								jogadores[vez].pontos += auxPontos;
 								auxPontos = 0;
@@ -249,20 +276,24 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 						}
 						if(jogada == 1) {
 							tabuleiro[linhaJog][colunaJog].letra=movimento[0];
-                                                	tabuleiro[linhaJog][colunaJog].num=movimento[1];
+							tabuleiro[linhaJog][colunaJog].num=movimento[1];
+							jogadores[vez].pecasJog[k].letra=' ';
+							jogadores[vez].pecasJog[k].num=' ';
 							jogadasTotais++;
 							jogadores[vez].pontos += auxPontos;
 							auxPontos = 0;
 							system("clear || cls");
 							guardaLinha = linhaJog;
 							guardaColuna = colunaJog;
-                                                	jogada++;
+							jogada++;
 							flag = 1;
 							break;
 						}
-          					} else if(!jogadasTotais){
+					}else if(!jogadasTotais){
 								tabuleiro[linhaJog][colunaJog].letra=movimento[0];
 								tabuleiro[linhaJog][colunaJog].num=movimento[1];
+								jogadores[vez].pecasJog[k].letra=' ';
+								jogadores[vez].pecasJog[k].num=' ';
 								jogada++;
 								jogadasTotais++;
 								jogadores[vez].pontos++;
@@ -278,23 +309,27 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 			}
 			if(flag) {
 				if(colunaJog == 0) {
-                        		realocaTab(tabuleiro, linha, coluna, 3);
-                                	guardaColuna++;
-                        	}
+					realocaTab(tabuleiro, linha, coluna, 3);
+					guardaColuna++;
+				}
 				if(colunaJog == (*coluna-1) && (*coluna > 1)) {
 					realocaTab(tabuleiro, linha, coluna, 4);
 				}
-                        	if(linhaJog == 0) {
-                                	realocaTab(tabuleiro, linha, coluna, 1);
-                               		guardaLinha++;
-                        	}
+				if(linhaJog == 0) {
+					realocaTab(tabuleiro, linha, coluna, 1);
+					guardaLinha++;
+				}
 				if(linhaJog == (*linha-1) && (*linha > 1)) {
 					realocaTab(tabuleiro, linha, coluna, 2);
 				}
 				system("clear || cls");
 			}
 			if(k==6) printf("Oh Oh! Voce nao tem essa peça.\n");
-		}else if(!strcmp(movimento,"trocar")||!strcmp(movimento,"t")){
+			if(jogadasTotais==108) {
+				*jogadasT = jogadasTotais;
+				break;
+			}
+		}else if((!strcmp(movimento,"trocar")||!strcmp(movimento,"t"))&&jogada==1){
 			j=aux;
 			int flagValido=0;
 			while(entrada[j+1]){
@@ -320,6 +355,7 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 		}else if(!strcmp(movimento,"passar")||!strcmp(movimento,"p")){
 			*jogadasT = jogadasTotais;
 			system("clear || cls");
+			posJogada(jogadores[vez].pecasJog,pecas);
 			break;
 		}else{
 			system("clear || cls");

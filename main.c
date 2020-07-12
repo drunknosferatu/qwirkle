@@ -7,7 +7,6 @@
 #include "pecas.h"
 #include "tab.h"
 #include "jogada.h"
-#include "flush.h"
 
 
 
@@ -88,6 +87,21 @@ int main(int *argc, char *argv[]) {
 				break;
 		}
 	}
+	char vencedor[42]="  ";
+	char empate[42]="  ";
+	int maiorPontos=0;
+	for(i=0;i<nJog;i++){
+		int z=strlen(jogadores[i].nome);
+		jogadores[i].nome[z-1]='\0';
+		printf("A pontuação do(a) jogador(a) %s foi:" "%d\n", jogadores[i].nome, jogadores[i].pontos);
+		if(jogadores[i].pontos>maiorPontos){
+			strcpy(vencedor,jogadores[i].nome);
+			maiorPontos=jogadores[i].pontos;
+		}
+		else if(jogadores[i].pontos==maiorPontos&&vencedor!="  ")strcpy(empate,jogadores[i].nome);
+	}
+	printf("O(a) vencedor(a) foi %s\n", vencedor);
+	if(empate[0]!=' ') printf("Houve empate entre %s e %s\n", empate, vencedor);
 	free(jogadores);
 	free(pecas);
 }
