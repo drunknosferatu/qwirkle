@@ -24,7 +24,7 @@ int main(int *argc, char *argv[]) {
 	peca *pecas;
 	//variável que guarda de quem é a vez de jogar
 	int vez = 0;
-	int cont = 0;
+	int jogadasT = 0;
 	//aloca memória para as peças do jogo e as inicializa
 	pecas = (peca *) malloc (sizeof(peca) * 108);
 	inicializaPecas(pecas);
@@ -45,22 +45,23 @@ int main(int *argc, char *argv[]) {
 	
 	//inicializa o tabuleiro como uma matriz de peças (que, por sua vez, são structs), com 5x5 posições abertas inicialmente
 	peca **tabuleiro;
-	tabuleiro = (peca **) malloc(sizeof(peca *) * linha);
+	tabuleiro = (peca **) malloc(sizeof(peca *)*108);
 	
-	for(i=0; i <linha; i++) {
+	for(i=0; i < 108; i++) {
 		//aloca as colunas da matriz
-		tabuleiro[i] = (peca *) malloc(sizeof(peca) * coluna);
-		for (j=0; j < coluna; j++) {
+		tabuleiro[i] = (peca *) malloc(sizeof(peca)*108);
+		/*for (j=0; j < coluna; j++) {
 			//inicializa as posições do tabuleiro com espaços
 			tabuleiro[i][j].num=' ';
-			tabuleiro[i][j].letra=' ';
+			tabuleiro[i][j].letra=' ';*/
 		}
-	}	
+		tabuleiro[0][0].num = ' ';
+		tabuleiro[0][0].letra = ' ';
+	//}	
 	//modo recebe o modo de jogo (cheat ou normal) e w é a flag que é levantada quando alguém ganhar o jogo (winner)
 	char modo;
-	int w = 0;
 	printf("\nDeseja jogar no modo cheat? Digite S para sim ou N para nao. Em seguida, pressione Enter: ");
-	while(!w) {
+	while(jogadasT != 108) {
 		setbuf(stdin, NULL);
 		modo = getc(stdin);
 		switch(modo) {
@@ -69,14 +70,13 @@ int main(int *argc, char *argv[]) {
 				system("clear || cls");
 				printf("Divirta-se! =)\n\n");
 				printf("Obs.: voce esta no cheat mode\n\n");
-				w = 1;
 				break;
 			case('N'):
 			case('n'):
 				system("clear || cls");
 				getchar();
-				while (!w) {
-					jogada(tabuleiro ,jogadores, pecas, vez,&linha,&coluna);
+				while (jogadasT != 108) {
+					jogada(tabuleiro, jogadores, pecas, vez, &linha, &coluna, &jogadasT);
 					vez++;
 					if(vez==nJog){
 						vez=0;

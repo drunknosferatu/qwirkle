@@ -7,7 +7,7 @@ void imprimeTab(peca **tabuleiro,int linha, int coluna){
 	int aux;
 	printf(" ");
 	for (aux=0;aux<coluna;aux++){
-		printf(" %d ",aux+1);
+		printf(" %d ",aux);
 	}
 	printf("\n");
 	for (int i=0;i<linha;i++){
@@ -16,13 +16,13 @@ void imprimeTab(peca **tabuleiro,int linha, int coluna){
 			printf("-");
 		}
 		printf("\n");
-		printf("%d", i+1);			
+		printf("%d", i);			
 		printf("|");
 		for (int j=0;j<coluna;j++){
 			printf("%c", tabuleiro[i][j].letra);
 			printf("%c|",tabuleiro[i][j].num);
 		}
-		printf("%d\n",i+1);
+		printf("%d\n",i);
 	}
 	printf(" -");
 	for(aux=0;aux<coluna*3;aux++){
@@ -31,52 +31,72 @@ void imprimeTab(peca **tabuleiro,int linha, int coluna){
 	printf("\n");
 	printf(" ");
 	for (aux=0;aux<coluna;aux++){
-		printf(" %d ",aux+1);
+		printf(" %d ",aux);
 	}
 	printf("\n");
 }
 
-peca ** realocaTab(peca **tabuleiro, int *maxlinhas, int *maxcolunas, int chave) {
-	
-	if(!chave) *maxlinhas += 5;
-	if(chave) *maxcolunas += 5;
+void realocaTab(peca **tabuleiro, int *linha, int *coluna, int chave) {
 	//realoca um tabuleiro de dimensão MxN, sendo M o número de linhas e N o número de colunas
-	tabuleiro = realloc(tabuleiro, (sizeof(peca) * ((*maxlinhas)*(*maxcolunas))));
-	
-	return tabuleiro;
-}
-
-peca ** atualizaTab(peca **tabuleiro, int linhaJog, int colunaJog, int *linha, int *coluna, int *maxlinhas, int *maxcolunas) {
-	
-	if((linhaJog == *linha) || (linhaJog == 0)) {
+	int i;
+	if(chave == 1) { 
 		*linha += 2;
-		if(*linha == *maxlinhas) realocaTab(tabuleiro, maxlinhas, maxcolunas, 0);
-		for(int i = (*linha - 2); i >= 0; i--) {
-			for(int j = *coluna; j >= 0; j--) {
+		/*tabuleiro = realloc(tabuleiro, sizeof(peca *)*(*linha));	
+		//tabuleiro[(*linha)-2] = (peca *) malloc(sizeof(peca)*(*coluna));
+		//tabuleiro[(*linha)-1] = (peca *) malloc(sizeof(peca)*(*coluna));
+		for(i = 0; i < *coluna; i++) {
+			tabuleiro[i] = realloc(tabuleiro[i], sizeof(peca)*(*linha));
+		}*/
+		for(i = (*linha-1); i >= 0; i--) {
+			for(int j = (*coluna-1); j >= 0; j--) {
 				if(tabuleiro[i][j].letra != ' ') {
 					tabuleiro[i+1][j].letra = tabuleiro[i][j].letra;
 					tabuleiro[i+1][j].num = tabuleiro[i][j].num;
 					tabuleiro[i][j].letra = ' ';
 					tabuleiro[i][j].num = ' ';
+					tabuleiro[*linha-1][j].letra = ' ';
+					tabuleiro[*linha-1][j].num = ' ';
 				}
 			}
 		}
 	}
+	
+	if(chave == 2) {
+		*linha += 1;
+		for(i = 0; i < *coluna; i++) {
+			//tabuleiro[*linha-2][i].letra = ' ';
+			//tabuleiro[*linha-2][i].num = ' ';
+			tabuleiro[*linha-1][i].letra = ' ';
+			tabuleiro[*linha-1][i].num = ' ';
+		}	
+	}
 
-	if(colunaJog == *linha || colunaJog == 0) {
+	if(chave == 3) {
         	*coluna += 2;
-		if(*coluna == *maxcolunas) realocaTab(tabuleiro, maxlinhas, maxcolunas, 1);
-                for(int i = (*coluna - 2); i >= 0; i--) {
-                        for(int j = *linha; j >= 0; j--) {
+		/*for(i = 0; i < *linha; i++) {
+                        tabuleiro = realloc(tabuleiro, sizeof(peca *)*(*linha));
+                }
+                tabuleiro[(*coluna)-2] = (peca *) malloc(sizeof(peca)*(*linha));
+		tabuleiro[(*coluna)-1] = (peca *) malloc(sizeof(peca)*(*linha));*/
+        	for(i = (*coluna-1); i >= 0; i--) {
+                        for(int j = (*linha-1); j >= 0; j--) {
                                 if(tabuleiro[j][i].letra != ' ') {
                                         tabuleiro[j][i+1].letra = tabuleiro[j][i].letra;
                                         tabuleiro[j][i+1].num = tabuleiro[j][i].num;
                                         tabuleiro[j][i].letra = ' ';
                                         tabuleiro[j][i].num = ' ';
+					tabuleiro[j][*coluna-1].letra = ' ';
+					tabuleiro[j][*coluna-1].num = ' ';
                                 }
                         }
                 }
-        }
+	}
 
-
+	if(chave == 4) {
+		*coluna += 1;
+		for(i = 0; i < *linha; i++) {
+			tabuleiro[i][*coluna-1].letra = ' ';
+			tabuleiro[i][*coluna-1].num = ' ';
+		}
+	}
 }
