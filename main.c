@@ -26,6 +26,9 @@ int main(int *argc, char *argv[]) {
 	int jogadasT = 0;
 	//aloca memória para as peças do jogo e as inicializa
 	pecas = (peca *) malloc (sizeof(peca) * 108);
+	if (pecas==NULL){
+		printf("Falha interna. Reinicie o jogo\n");
+	}
 	inicializaPecas(pecas);
 	//printa a interface inicial do jogo e recebe o número de jogadores
 	system("clear || cls");
@@ -40,27 +43,33 @@ int main(int *argc, char *argv[]) {
 	}
 	//faz a alocação de memória pro ponteiro de jogadores e inicializa os jogadores com seus nomes, suas peças e pontuações iniciais (0)
 	jogadores = (jogador *) malloc(sizeof(jogador) * nJog);
+	if(jogadores==NULL){
+		printf("Falha interna. Reinicie o jogo\n");
+		exit(0);
+	}
 	configuraJogo (nJog, jogadores, pecas);
 	
 	//inicializa o tabuleiro como uma matriz de peças (que, por sua vez, são structs), com 5x5 posições abertas inicialmente
 	peca **tabuleiro;
 	tabuleiro = (peca **) malloc(sizeof(peca *)*108);
+	if(tabuleiro==NULL){
+		printf("Falha interna. Reinicie o programa\n");
+		exit(0);
+	}
 	
 	for(i=0; i < 108; i++) {
 		//aloca as colunas da matriz
 		tabuleiro[i] = (peca *) malloc(sizeof(peca)*108);
-		/*for (j=0; j < coluna; j++) {
-			//inicializa as posições do tabuleiro com espaços
-			tabuleiro[i][j].num=' ';
-			tabuleiro[i][j].letra=' ';*/
+		if(tabuleiro[i]==NULL){
+			printf("Falha interna reinicie o programa\n");
+			exit(0);
 		}
+	}
 		tabuleiro[0][0].num = ' ';
 		tabuleiro[0][0].letra = ' ';
-	//}	
-	//modo recebe o modo de jogo (cheat ou normal) e w é a flag que é levantada quando alguém ganhar o jogo (winner)
+	//modo recebe o modo de jogo (cheat ou normal)
 	char modo;
 	printf("\nDeseja jogar no modo cheat? Digite S para sim ou N para nao. Em seguida, pressione Enter: ");
-	while(jogadasT != 108) {
 		setbuf(stdin, NULL);
 		modo = getc(stdin);
 		switch(modo) {
@@ -69,7 +78,14 @@ int main(int *argc, char *argv[]) {
 				system("clear || cls");
 				printf("Divirta-se! =)\n\n");
 				printf("Obs.: voce esta no cheat mode\n\n");
-				break;
+        	getchar();
+				while (jogadasT != 108) {
+          cheatMode(tabuleiro, jogadores, pecas, vez, &linha, &coluna, &jogadasT);
+					vez++;
+					if(vez==nJog){
+						vez=0;
+					}
+				}
 			case('N'):
 			case('n'):
 				system("clear || cls");
@@ -86,7 +102,6 @@ int main(int *argc, char *argv[]) {
 				printf("\nOh oh! Opcao invalida. Tente novamente inserindo os caracteres S ou N.\n\n");
 				break;
 		}
-	}
 	char vencedor[42]="  ";
 	char empate[42]="  ";
 	int maiorPontos=0;
@@ -104,4 +119,8 @@ int main(int *argc, char *argv[]) {
 	if(empate[0]!=' ') printf("Houve empate entre %s e %s\n", empate, vencedor);
 	free(jogadores);
 	free(pecas);
+	for(i=0;i<108;i++){
+		free(tabuleiro[i]);
+	}
+	free(tabuleiro);
 }

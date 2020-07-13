@@ -25,4 +25,4 @@ clean: entrada.o pecas.o tab.o jogada.o main.o qwirkle
 	rm *.o qwirkle
 
 zip: struct.h entrada.c entrada.h pecas.c pecas.h tab.c tab.h jogada.c jogada.h main.c
-	zip qwirkle.zip Makefile *.c *.h	
+	zip qwirkle.zip Makefile *.c *.h
