@@ -7,7 +7,7 @@
 #include "pecas.h"
 
 //verifica se o jogador pode ou não fazer a jogada que deseja
-int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog, int linha, int coluna, int *pontos) {
+int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog, int linha, int coluna) {
 	int i;
 	//existem quatro posições que PODEM invalidar uma jogada. São elas: a de cima, de baixo, da esquerda e da direita. Esse contador acumula quantas dessas posições batem com a posições permitem a jogada. Se as quatro permitirem, a jogada é válida
 	int cont = 0;
@@ -77,7 +77,6 @@ int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog, 
 		i = linhaJog - 1;
 		while((tabuleiro[i][colunaJog].letra != ' ') && (i >= 0)) {
 			if((tabuleiro[i][colunaJog].letra == pecaJog.letra) && (tabuleiro[i][colunaJog].num == pecaJog.num)) return 0;
-			*pontos++;
 			i--;
 		}
 	}	
@@ -85,7 +84,6 @@ int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog, 
 	i = linhaJog + 1;
 	while((tabuleiro[i][colunaJog].letra != ' ') && (i < linha)) {
         	if((tabuleiro[i][colunaJog].letra == pecaJog.letra) && (tabuleiro[i][colunaJog].num == pecaJog.num)) return 0;
-                *pontos++;
 		i++;
         }
 	
@@ -93,7 +91,7 @@ int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog, 
 		i = colunaJog - 1;
         	while((tabuleiro[linhaJog][i].letra != ' ') && (i >= 0)) {
                 	if((tabuleiro[linhaJog][i].letra == pecaJog.letra) && (tabuleiro[linhaJog][i].num == pecaJog.num)) return 0;
-                	*pontos++;
+
 			i--;
         	}
 	}
@@ -101,7 +99,6 @@ int verificaJogada(peca **tabuleiro, peca pecaJog, int linhaJog, int colunaJog, 
 	i = colunaJog + 1;
         while((tabuleiro[linhaJog][i].letra != ' ') && (i < coluna)) {
                 if((tabuleiro[linhaJog][i].letra == pecaJog.letra) && (tabuleiro[linhaJog][i].num == pecaJog.num)) return 0;
-                *pontos++;
 		i++;
         }
 
@@ -132,7 +129,88 @@ void posJogada(peca* pecasJog, peca* pecas){
 	}
 }
 
-
+int punktuation(int jogada,int guardaLinha, int guardaColuna,peca **tabuleiro,char loc){
+	int pontuacao=0;
+	int pontuacaoVert=0;
+	int pontuacaoHor=0;
+	int s;
+	int d;
+	if(jogada==2){
+		s=guardaLinha;
+		while(tabuleiro[s][guardaColuna].letra!=' '){
+			pontuacaoHor++;
+			s--;
+		}
+		s=guardaLinha+1;
+		while(tabuleiro[s][guardaColuna].letra!=' '){
+			pontuacaoHor++;
+			s++;
+		}
+		s=guardaColuna;
+		while(tabuleiro[guardaLinha][s].letra!=' '){
+			pontuacaoVert++;
+			s--;
+		}
+		s=guardaColuna+1;
+		while(tabuleiro[s][guardaColuna].letra!=' '){
+			pontuacaoVert++;
+			s++;
+		}
+		if(pontuacaoVert==6)pontuacaoVert+=6;
+		if(pontuacaoHor==6)pontuacaoHor+=6;
+		pontuacao+=pontuacaoVert;
+		pontuacao+=pontuacaoHor;
+		return pontuacao;
+	}else if(loc=='L'){
+		s=guardaColuna;
+		while(tabuleiro[guardaLinha][s].letra!=' ')s++;
+		s--;
+		while(tabuleiro[guardaLinha][s].letra!=' '){
+			pontuacaoHor++;
+			d=guardaLinha;
+			while(tabuleiro[d][s].letra!=' '){
+				pontuacaoVert++;
+				d++;
+			}
+			d=guardaLinha-1;
+			while(tabuleiro[d][s].letra!=' '){
+				pontuacaoVert++;
+				d--;
+			}
+			s--;
+			if (pontuacaoVert==6) pontuacaoVert+=6;
+			pontuacao+=pontuacaoVert;
+			pontuacaoVert=0;
+		}
+		if (pontuacaoHor==6) pontuacaoHor+=6;
+		pontuacao+=pontuacaoHor;
+		return pontuacao;
+	}else if(loc=='C'){
+		s=guardaLinha;
+		while(tabuleiro[s][guardaColuna].letra!=' ')s++;
+		s--;
+		while(tabuleiro[s][guardaColuna].letra!=' '){
+			pontuacaoVert++;
+			d=guardaColuna;
+			while(tabuleiro[s][d].letra!=' '){
+				pontuacaoHor++;
+				d++;
+			}
+			d=guardaColuna-1;
+			while(tabuleiro[s][d].letra!=' '){
+				pontuacaoHor++;
+				d--;
+			}
+			s--;
+			if(pontuacaoHor==6) pontuacaoHor+=6;
+			pontuacao+=pontuacaoHor;
+			pontuacaoVert=0;
+		}
+		if (pontuacaoVert==6) pontuacaoVert+=6;
+		pontuacao+=pontuacaoHor;
+		return pontuacao;
+	}
+}
 
 void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linha, int *coluna, int *jogadasT) {
 	int jogadasTotais = *jogadasT;
@@ -142,13 +220,10 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 	char entrada[30];
 	int guardaLinha;
 	int guardaColuna;
-	char loc;
+	char loc=' ';
 	int flag = 0;
 	int jogada = 1;
-	int auxPontos = 0;
 	while(1){
-		printf("Jogada: %d\n\n\n", jogada);
-		printf("Jogadas totais: %d\n\n\n", jogadasTotais);
 		imprimeTab(tabuleiro, *linha, *coluna);
 		printf("\nVez do(a) %s\n", jogadores[vez].nome);
 		printf("Peças disponiveis: ");
@@ -200,14 +275,39 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 			for (k = 0; k < 6; k++){
 				if (movimento[0]==jogadores[vez].pecasJog[k].letra && movimento[1]==jogadores[vez].pecasJog[k].num){
 					while(entrada[j]==' ')j++;
-					linhaJog = entrada[j++]-'0';
+					char auxIndice[3];
+					auxIndice[1]='\0';
+					int s=0;
+					while(entrada[j]!=' '&&entrada[j]){
+						auxIndice[s]=entrada[j];
+						j++;
+						s++;
+					}
+					if(auxIndice[1]){
+						linhaJog=((auxIndice[0]-'0')*10)+(auxIndice[1]-'0');
+					}else{
+						linhaJog=auxIndice[0]-'0';
+					}
+					s=0;
+					auxIndice[1]='\0';
 					while(entrada[j]==' ')j++;
-					colunaJog = entrada[j]-'0';
+					while(entrada[j]!=' '&&entrada[j+1]){
+						auxIndice[s]=entrada[j];
+						s++;
+						j++;
+					}
+					if(auxIndice[1]){
+						colunaJog=((auxIndice[0]-'0')*10)+(auxIndice[1]-'0');
+					}else{
+						colunaJog=auxIndice[0]-'0';
+					}
+					printf("%d\n", linhaJog);
+					printf("%d\n",colunaJog);
 					if(colunaJog<0||colunaJog>=*coluna||linhaJog<0||linhaJog>=*linha){
 						printf("Oh Oh! Essa posição nao existe.\n");
 						break;
 					}
-					if(jogadasTotais && verificaJogada(tabuleiro,jogadores[vez].pecasJog[k],linhaJog,colunaJog, *linha, *coluna, &auxPontos)){
+					if(jogadasTotais && verificaJogada(tabuleiro,jogadores[vez].pecasJog[k],linhaJog,colunaJog, *linha, *coluna)){
 						if(jogada == 3) {
 							if(loc = 'C') {
 								if(colunaJog == guardaColuna) {
@@ -216,8 +316,6 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 									jogadores[vez].pecasJog[k].letra=' ';
 									jogadores[vez].pecasJog[k].num=' ';
 									jogadasTotais++;
-									jogadores[vez].pontos += auxPontos;
-									auxPontos = 0;
 									system("clear || cls");
 									flag = 1;
 									break;
@@ -233,8 +331,6 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 									jogadores[vez].pecasJog[k].letra=' ';
 									jogadores[vez].pecasJog[k].num=' ';
 									jogadasTotais++;
-									jogadores[vez].pontos += auxPontos;
-									auxPontos = 0;
 									system("clear || cls");
 									flag = 1;
 									break;
@@ -252,8 +348,6 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 								jogadores[vez].pecasJog[k].letra=' ';
 								jogadores[vez].pecasJog[k].num=' ';
 								jogadasTotais++;
-								jogadores[vez].pontos += auxPontos;
-								auxPontos = 0;
 								system("clear || cls");
 								jogada++;
 								flag = 1;
@@ -266,14 +360,12 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 								jogadores[vez].pecasJog[k].letra=' ';
 								jogadores[vez].pecasJog[k].num=' ';
 								jogadasTotais++;
-								jogadores[vez].pontos += auxPontos;
-								auxPontos = 0;
 								system("clear || cls");
 								jogada++;
 								flag = 1;
 								break;
 							}
-							printf("Oh oh! Jogada invalida. Voce so pode jogar na linha ou coluna que jogou na ultima jogada!");
+							printf("Oh oh! Jogada invalida. Voce so pode jogar na linha ou coluna que jogou na ultima jogada!\n");
 							break;
 						}
 						if(jogada == 1) {
@@ -282,8 +374,6 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 							jogadores[vez].pecasJog[k].letra=' ';
 							jogadores[vez].pecasJog[k].num=' ';
 							jogadasTotais++;
-							jogadores[vez].pontos += auxPontos;
-							auxPontos = 0;
 							system("clear || cls");
 							guardaLinha = linhaJog;
 							guardaColuna = colunaJog;
@@ -296,6 +386,8 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 						tabuleiro[linhaJog][colunaJog].num=movimento[1];
 						*linha += 2;
 						*coluna += 2;
+						guardaColuna=colunaJog;
+						guardaLinha=linhaJog;
 						jogadores[vez].pecasJog[k].letra=' ';
 						jogadores[vez].pecasJog[k].num=' ';
 						tabuleiro[1][1] = tabuleiro[0][0];
@@ -328,7 +420,6 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 				if((colunaJog == 0) && (jogadasTotais != 1)) {
 					realocaTab(tabuleiro, linha, coluna, 3);
 					guardaColuna++;
-					colunaJog++;
 				}
 				if(colunaJog == (*coluna-1) && (*coluna > 1)) {
 					realocaTab(tabuleiro, linha, coluna, 4);
@@ -336,7 +427,6 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 				if((linhaJog == 0) && (jogadasTotais != 1)) {
 					realocaTab(tabuleiro, linha, coluna, 1);
 					guardaLinha++;
-					linhaJog++;
 				}
 				if(linhaJog == (*linha-1) && (*linha > 1)) {
 					realocaTab(tabuleiro, linha, coluna, 2);
@@ -372,41 +462,15 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 				break;
 			}
 		}else if(!strcmp(movimento,"passar")||!strcmp(movimento,"p")){
-			int pontuacao=0;
-			int pontuacaoVert=0;
-			int pontuacaoHor=0;
-			if(loc=='L'){
-				int s=guardaColuna;
-				while(tabuleiro[guardaLinha][s].letra!=' ')s++;
-				s--;
-				while(tabuleiro[guardaLinha][s].letra!=' '){
-					pontuacaoHor++;
-					int d=guardaLinha;
-					while(tabuleiro[d][s].letra!=' '){
-						pontuacaoVert++;
-						d++;
-					}
-					d=guardaLinha-1;
-					while(tabuleiro[d][s].letra!=' '){
-						pontuacaoVert++;
-						d--;
-					}
-					s--;
-					if (pontuacaoVert==6) pontuacaoVert+=6;
-					pontuacao+=pontuacaoVert;
-					pontuacaoVert=0;
-				}
-				if (pontuacaoHor==6) pontuacaoHor+=6;
-				pontuacao+=pontuacaoHor;
-				jogadores[vez].pontos+=pontuacao;
-			}
+			//jogadores[vez].pontos+=punktuation(jogada, guardaLinha, guardaColuna, tabuleiro,loc);
 			*jogadasT = jogadasTotais;
 			system("clear || cls");
 			posJogada(jogadores[vez].pecasJog,pecas);
 			break;
 		}else{
 			system("clear || cls");
-			printf("Oh Oh! Entrada invalida.");
+			printf("Oh Oh! Entrada invalida.\n");
 		}
 	}
 }
+
