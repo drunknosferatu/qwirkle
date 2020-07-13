@@ -135,7 +135,9 @@ void posJogada(peca* pecasJog, peca* pecas){
 
 
 void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linha, int *coluna, int *jogadasT) {
-	int jogadasTotais = *jogadasT; 
+	int jogadasTotais = *jogadasT;
+	int primJogadaLinha;
+	int primJogadaColuna;
 	char movimento[30];
 	char entrada[30];
 	int guardaLinha;
@@ -290,16 +292,31 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 							break;
 						}
 					}else if(!jogadasTotais){
-								tabuleiro[linhaJog][colunaJog].letra=movimento[0];
-								tabuleiro[linhaJog][colunaJog].num=movimento[1];
-								jogadores[vez].pecasJog[k].letra=' ';
-								jogadores[vez].pecasJog[k].num=' ';
-								jogada++;
-								jogadasTotais++;
-								jogadores[vez].pontos++;
-								system("clear || cls");
-								flag = 1;
-								break;
+						tabuleiro[linhaJog][colunaJog].letra=movimento[0];
+						tabuleiro[linhaJog][colunaJog].num=movimento[1];
+						*linha += 2;
+						*coluna += 2;
+						jogadores[vez].pecasJog[k].letra=' ';
+						jogadores[vez].pecasJog[k].num=' ';
+						tabuleiro[1][1] = tabuleiro[0][0];
+						for(i = 0; i < 4; i++) {
+							tabuleiro[0][i].letra = ' ';
+							tabuleiro[0][i].num = ' ';
+							tabuleiro[2][i].letra = ' ';
+							tabuleiro[2][i].num = ' ';
+						}
+						tabuleiro[1][0].letra = ' ';
+						tabuleiro[1][0].num = ' ';
+						tabuleiro[1][2].letra = ' ';
+						tabuleiro[1][2].num = ' ';
+						guardaColuna++;
+						guardaLinha++;
+						jogada++;
+						jogadasTotais++;
+						jogadores[vez].pontos++;
+						system("clear || cls");
+						flag = 1;
+						break;
 					}else{
 						system("clear || cls");
 						printf("Oh Oh! Jogada invalida.\n");
@@ -308,16 +325,18 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 				}
 			}
 			if(flag) {
-				if(colunaJog == 0) {
+				if((colunaJog == 0) && (jogadasTotais != 1)) {
 					realocaTab(tabuleiro, linha, coluna, 3);
 					guardaColuna++;
+					colunaJog++;
 				}
 				if(colunaJog == (*coluna-1) && (*coluna > 1)) {
 					realocaTab(tabuleiro, linha, coluna, 4);
 				}
-				if(linhaJog == 0) {
+				if((linhaJog == 0) && (jogadasTotais != 1)) {
 					realocaTab(tabuleiro, linha, coluna, 1);
 					guardaLinha++;
+					linhaJog++;
 				}
 				if(linhaJog == (*linha-1) && (*linha > 1)) {
 					realocaTab(tabuleiro, linha, coluna, 2);
@@ -353,6 +372,34 @@ void jogada(peca **tabuleiro,jogador *jogadores, peca *pecas, int vez, int *linh
 				break;
 			}
 		}else if(!strcmp(movimento,"passar")||!strcmp(movimento,"p")){
+			int pontuacao=0;
+			int pontuacaoVert=0;
+			int pontuacaoHor=0;
+			if(loc=='L'){
+				int s=guardaColuna;
+				while(tabuleiro[guardaLinha][s].letra!=' ')s++;
+				s--;
+				while(tabuleiro[guardaLinha][s].letra!=' '){
+					pontuacaoHor++;
+					int d=guardaLinha;
+					while(tabuleiro[d][s].letra!=' '){
+						pontuacaoVert++;
+						d++;
+					}
+					d=guardaLinha-1;
+					while(tabuleiro[d][s].letra!=' '){
+						pontuacaoVert++;
+						d--;
+					}
+					s--;
+					if (pontuacaoVert==6) pontuacaoVert+=6;
+					pontuacao+=pontuacaoVert;
+					pontuacaoVert=0;
+				}
+				if (pontuacaoHor==6) pontuacaoHor+=6;
+				pontuacao+=pontuacaoHor;
+				jogadores[vez].pontos+=pontuacao;
+			}
 			*jogadasT = jogadasTotais;
 			system("clear || cls");
 			posJogada(jogadores[vez].pecasJog,pecas);
