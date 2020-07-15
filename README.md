@@ -1,7 +1,8 @@
 # qwirkle
-Este repositório foi feito com o intuito de facilitar o desenvolvimento conjunto do jogo de tabuleiro qwirkle para a matéria de introdução à ciência da
-computação da universidade de São Paulo ministrada por Adenilso Silva Simão.
-O código presente neste repositório foi desenvolvido por :(em ordem de atribuição de nota)
+Este repositório foi feito com o intuito de facilitar o desenvolvimento conjunto do jogo de tabuleiro Qwirkle. O jogo foi desenvolvido para a disciplina Introdução à Ciência da
+Computação I, da Universidade de São Paulo, ministrada por Adenilso Silva Simão.
+O código presente neste repositório foi desenvolvido por (em ordem de atribuição de nota):
+
 Nome: Felipe de Alcântara Tomé
 N° USP: 11800970
 
